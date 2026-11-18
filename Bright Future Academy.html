@@ -1,0 +1,473 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Purnima School</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: 'var(--bg)', fg: 'var(--fg)', muted: 'var(--muted)', surface: 'var(--surface)',
+          brand: 'var(--brand)', onbrand: 'var(--onbrand)', accent: 'var(--accent)',
+          line: 'var(--line)', tint: 'var(--tint)'
+        },
+        fontFamily: {
+          display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+          body: ['"Source Sans 3"', 'system-ui', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* Layout: full-width bands, each with an inner 1120px wrapper; hero on a deep-blue field with a school-calendar card. */
+  :root {
+    --bg: #f6f8fc; --fg: #14213d; --muted: #55607a; --surface: #ffffff;
+    --brand: #1f3a8a; --onbrand: #ffffff; --accent: #f2b705;
+    --line: #d9e1ef; --tint: #e8eefb;
+    --hero: #1f3a8a; --hero-fg: #ffffff; --hero-soft: #c9d6f7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1324; --fg: #e6ebf7; --muted: #9aa6c4; --surface: #151d36;
+      --brand: #7d9dff; --onbrand: #0d1324; --accent: #f2b705;
+      --line: #26304f; --tint: #1a2547;
+      --hero: #16224a; --hero-fg: #ffffff; --hero-soft: #b9c7ee;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1324; --fg: #e6ebf7; --muted: #9aa6c4; --surface: #151d36;
+    --brand: #7d9dff; --onbrand: #0d1324; --accent: #f2b705;
+    --line: #26304f; --tint: #1a2547;
+    --hero: #16224a; --hero-fg: #ffffff; --hero-soft: #b9c7ee;
+    color-scheme: dark;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 17px; line-height: 1.6;
+  }
+  h1, h2, h3 { font-family: 'Bricolage Grotesque', system-ui, sans-serif; text-wrap: balance; line-height: 1.1; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--surface); }
+
+  .wrap {
+    max-width: 1120px; margin-inline: auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .hero { background: var(--hero); color: var(--hero-fg); position: relative; overflow: hidden; }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+    background-image: linear-gradient(var(--hero-soft) 1px, transparent 1px), linear-gradient(90deg, var(--hero-soft) 1px, transparent 1px);
+    background-size: 44px 44px; mask-image: linear-gradient(115deg, transparent 35%, #000 100%);
+    -webkit-mask-image: linear-gradient(115deg, transparent 35%, #000 100%); opacity: .14;
+  }
+  .hero > * { position: relative; z-index: 1; }
+
+  .nav-link { position: relative; padding-block: 4px; }
+  .nav-link::after { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--accent); transition: width .2s ease; }
+  .nav-link:hover::after { width: 100%; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; transition: transform .2s ease, border-color .2s ease; }
+  .card:hover { transform: translateY(-4px); border-color: var(--brand); }
+  .tile { border-radius: 12px; min-height: 180px; display: flex; align-items: flex-end; padding: 14px; font-weight: 600; color: #fff; }
+  .field { width: 100%; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .field:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--brand); }
+  .chip { border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 6px 16px; border-radius: 999px; font-weight: 600; font-size: 14px; }
+  .chip:hover { border-color: var(--brand); }
+  .chip[aria-pressed="true"] { background: var(--brand); color: var(--onbrand); border-color: var(--brand); }
+  .g-tile, .g-panel {
+    background: radial-gradient(circle at 82% 22%, rgba(255,255,255,.22) 0 54px, transparent 55px),
+                radial-gradient(circle at 12% 88%, rgba(255,255,255,.12) 0 80px, transparent 81px),
+                linear-gradient(160deg, var(--c1), var(--c2));
+  }
+  .g-tile { position: relative; width: 100%; min-height: 190px; border-radius: 12px; overflow: hidden; display: flex; align-items: flex-end; padding: 14px; text-align: left; color: #fff; font-weight: 600; cursor: pointer; transition: transform .2s ease; }
+  .g-tile::before { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgba(0,0,0,.55)); }
+  .g-tile span { position: relative; }
+  .g-tile:hover { transform: scale(1.03); }
+  .lb { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; background: rgba(8,12,24,.88);
+        padding: max(16px, env(safe-area-inset-top, 0px)) max(64px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(64px, env(safe-area-inset-left, 0px)); }
+  .lb-btn { position: absolute; width: 44px; height: 44px; border-radius: 999px; background: rgba(255,255,255,.14); color: #fff; font-size: 22px; line-height: 1; }
+  .lb-btn:hover { background: rgba(255,255,255,.28); }
+  .lb-fig { width: 100%; max-width: 860px; color: #fff; }
+  .g-panel { width: 100%; aspect-ratio: 16 / 10; max-height: 70vh; border-radius: 14px; }
+  @media (prefers-reduced-motion: reduce) { .g-tile { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .card, .nav-link::after { transition: none; } }
+</style>
+
+ </head>
+<body>
+<div class="text-sm" style="background: var(--hero); color: var(--hero-soft);">
+  <div class="wrap py-2 flex flex-wrap justify-between gap-x-6 gap-y-1">
+    <span>9843978644 &nbsp;·&nbsp; info@brightfuture.edu.np</span>
+    <span>Admissions open for the 2027 session</span>
+  </div>
+</div>
+
+<header class="site-header">
+  <nav class="wrap h-16 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-3 font-display font-bold text-lg sm:text-xl" style="color: var(--brand);">
+      <span class="w-9 h-9 rounded-md bg-brand text-onbrand grid place-items-center font-extrabold">P</span>
+      Purnima School
+    </a>
+    <ul class="hidden md:flex items-center gap-8 font-medium">
+      <li><a class="nav-link" href="#about">About</a></li>
+      <li><a class="nav-link" href="#programs">Programs</a></li>
+      <li><a class="nav-link" href="#facilities">Facilities</a></li>
+      <li><a class="nav-link" href="#faculty">Faculty</a></li>
+      <li><a class="nav-link" href="#news">News</a></li>
+      <li><a class="nav-link" href="#gallery">Gallery</a></li>
+      <li><a class="nav-link" href="#contact">Contact</a></li>
+      <li><a href="#admission" class="bg-brand text-onbrand px-5 py-2 rounded-md font-semibold hover:opacity-90">Apply now</a></li>
+    </ul>
+    <button id="menuBtn" class="md:hidden p-2" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </nav>
+  <ul id="mobileMenu" class="wrap hidden flex-col pb-4 gap-1 font-medium border-t border-line md:hidden">
+    <li><a class="block py-2" href="#about">About</a></li>
+    <li><a class="block py-2" href="#programs">Programs</a></li>
+    <li><a class="block py-2" href="#facilities">Facilities</a></li>
+    <li><a class="block py-2" href="#faculty">Faculty</a></li>
+    <li><a class="block py-2" href="#news">News</a></li>
+    <li><a class="block py-2" href="#gallery">Gallery</a></li>
+    <li><a class="block py-2" href="#contact">Contact</a></li>
+    <li><a class="block py-2 font-semibold text-brand" href="#admission">Apply now →</a></li>
+  </ul>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div class="wrap py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
+      <div class="min-w-0">
+        <p class="inline-block text-sm px-4 py-1 rounded-full mb-5" style="background: rgba(255,255,255,.14);">Est. 1998 · Nursery to Grade 12</p>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold">Learn. Grow. <span style="color: var(--accent);">Lead.</span></h1>
+        <p class="mt-5 text-lg max-w-xl" style="color: var(--hero-soft);">
+          Small classes, qualified teachers and a campus built for curious children. Every student is known by name.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="#admission" class="px-7 py-3 rounded-md font-semibold hover:opacity-90" style="background: var(--accent); color: #14213d;">Apply for admission</a>
+          <a href="#about" class="px-7 py-3 rounded-md font-semibold border hover:bg-white hover:text-[#14213d]" style="border-color: rgba(255,255,255,.6);">About the school</a>
+        </div>
+      </div>
+      <div class="min-w-0 rounded-2xl p-6 sm:p-8" style="background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);">
+        <h2 class="text-xl font-bold mb-5">Upcoming events</h2>
+        <ul class="space-y-5">
+          <li class="flex gap-4"><span class="shrink-0 w-14 text-center rounded-md py-2 font-bold leading-tight" style="background: var(--accent); color:#14213d;">20<br><small>NOV</small></span><div class="min-w-0"><p class="font-semibold">Annual Science Fair</p><p class="text-sm" style="color: var(--hero-soft);">School auditorium, 10:00 AM</p></div></li>
+          <li class="flex gap-4"><span class="shrink-0 w-14 text-center rounded-md py-2 font-bold leading-tight" style="background: var(--accent); color:#14213d;">02<br><small>DEC</small></span><div class="min-w-0"><p class="font-semibold">Parent–Teacher Meeting</p><p class="text-sm" style="color: var(--hero-soft);">All classrooms, 9:00 AM</p></div></li>
+          <li class="flex gap-4"><span class="shrink-0 w-14 text-center rounded-md py-2 font-bold leading-tight" style="background: var(--accent); color:#14213d;">15<br><small>DEC</small></span><div class="min-w-0"><p class="font-semibold">Annual Sports Day</p><p class="text-sm" style="color: var(--hero-soft);">School ground, 8:00 AM</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-tint">
+    <div class="wrap py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div><p class="font-display text-4xl font-extrabold text-brand">28</p><p class="text-sm text-muted">Years of teaching</p></div>
+      <div><p class="font-display text-4xl font-extrabold text-brand">1,800</p><p class="text-sm text-muted">Students</p></div>
+      <div><p class="font-display text-4xl font-extrabold text-brand">90</p><p class="text-sm text-muted">Teachers</p></div>
+      <div><p class="font-display text-4xl font-extrabold text-brand">1 : 22</p><p class="text-sm text-muted">Teacher to student ratio</p></div>
+    </div>
+  </section>
+
+  <section id="about" class="wrap py-16 md:py-20 grid md:grid-cols-2 gap-12 items-center">
+    <div class="min-w-0 rounded-2xl p-8 text-onbrand bg-brand">
+      <p class="text-sm uppercase tracking-widest opacity-80">Our promise</p>
+      <p class="font-display text-2xl sm:text-3xl font-bold mt-3">Every child leaves us able to think clearly, speak confidently and act kindly.</p>
+      <p class="mt-6 text-sm opacity-80">Principal's message, Academic Year 2027</p>
+    </div>
+    <div class="min-w-0">
+      <p class="text-brand font-semibold uppercase tracking-widest text-sm">About us</p>
+      <h2 class="text-3xl md:text-4xl font-bold mt-2">A school where every child is known</h2>
+      <p class="mt-4 text-muted">Purnima School combines a strong academic base with sport, music and values education. Small classes mean each student gets real attention from their teacher.</p>
+      <ul class="mt-6 space-y-3">
+        <li class="flex gap-3"><span class="text-brand font-bold">✓</span> Qualified, caring faculty</li>
+        <li class="flex gap-3"><span class="text-brand font-bold">✓</span> Smart classrooms, science and computer labs</li>
+        <li class="flex gap-3"><span class="text-brand font-bold">✓</span> Safe campus with school bus routes</li>
+        <li class="flex gap-3"><span class="text-brand font-bold">✓</span> Sports, music, art and student clubs</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="programs" class="bg-tint py-16 md:py-20">
+    <div class="wrap">
+      <div class="max-w-2xl">
+        <p class="text-brand font-semibold uppercase tracking-widest text-sm">Academics</p>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2">Programs by stage</h2>
+        <p class="mt-3 text-muted">Learning that fits each age and builds skills step by step.</p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <article class="card p-6"><span class="inline-block font-display font-bold text-brand text-2xl">Nursery–KG</span><h3 class="font-bold text-lg mt-3">Early Years</h3><p class="text-sm text-muted mt-2">Play-based learning that builds language, number sense and confidence.</p></article>
+        <article class="card p-6"><span class="inline-block font-display font-bold text-brand text-2xl">Grades 1–5</span><h3 class="font-bold text-lg mt-3">Primary</h3><p class="text-sm text-muted mt-2">Strong foundations in reading, writing, mathematics and science.</p></article>
+        <article class="card p-6"><span class="inline-block font-display font-bold text-brand text-2xl">Grades 6–8</span><h3 class="font-bold text-lg mt-3">Middle School</h3><p class="text-sm text-muted mt-2">Project work, lab practicals and the start of subject specialisation.</p></article>
+        <article class="card p-6"><span class="inline-block font-display font-bold text-brand text-2xl">Grades 9–12</span><h3 class="font-bold text-lg mt-3">Secondary</h3><p class="text-sm text-muted mt-2">Science, Management and Humanities streams with board exam preparation.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="facilities" class="wrap py-16 md:py-20">
+    <div class="max-w-2xl">
+      <p class="text-brand font-semibold uppercase tracking-widest text-sm">Facilities</p>
+      <h2 class="text-3xl md:text-4xl font-bold mt-2">Built for learning, sport and safety</h2>
+      <p class="mt-3 text-muted">Sample figures. Update them to match your campus.</p>
+    </div>
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <article class="card p-6">
+        <svg class="w-8 h-8 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H4zM8 20h8M12 16v4"/></svg>
+        <h3 class="font-bold text-lg mt-4">Computer lab</h3>
+        <p class="text-sm text-muted mt-2">Modern workstations with high-speed internet for coding, design and digital skills.</p>
+        <p class="text-xs font-semibold text-brand mt-4 tracking-wide">40 WORKSTATIONS</p>
+      </article>
+      <article class="card p-6">
+        <svg class="w-8 h-8 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M8 15h8"/></svg>
+        <h3 class="font-bold text-lg mt-4">Science laboratories</h3>
+        <p class="text-sm text-muted mt-2">Separate physics, chemistry and biology labs with safety equipment for every practical.</p>
+        <p class="text-xs font-semibold text-brand mt-4 tracking-wide">3 LABS</p>
+      </article>
+      <article class="card p-6">
+        <svg class="w-8 h-8 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1zM12 6v14"/></svg>
+        <h3 class="font-bold text-lg mt-4">Library</h3>
+        <p class="text-sm text-muted mt-2">A quiet reading hall with story books, reference works and a digital catalogue.</p>
+        <p class="text-xs font-semibold text-brand mt-4 tracking-wide">12,000 BOOKS</p>
+      </article>
+      <article class="card p-6">
+        <svg class="w-8 h-8 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6c3 2.4 3 10.4 0 12.8M18.4 5.6c-3 2.4-3 10.4 0 12.8"/></svg>
+        <h3 class="font-bold text-lg mt-4">Sports ground</h3>
+        <p class="text-sm text-muted mt-2">Football and cricket field, basketball and volleyball courts, and a trained sports coach.</p>
+        <p class="text-xs font-semibold text-brand mt-4 tracking-wide">2 ACRES</p>
+      </article>
+      <article class="card p-6">
+        <svg class="w-8 h-8 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15V7h13v8M16 10h3l2 3v2h-5M3 15h18M7 18.5a1.5 1.5 0 1 0 0-.01M17 18.5a1.5 1.5 0 1 0 0-.01"/></svg>
+        <h3 class="font-bold text-lg mt-4">School transport</h3>
+        <p class="text-sm text-muted mt-2">GPS-tracked buses covering the main routes across the valley, with a staff member on every bus.</p>
+        <p class="text-xs font-semibold text-brand mt-4 tracking-wide">18 BUSES</p>
+      </article>
+      <article class="card p-6">
+        <svg class="w-8 h-8 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4"/></svg>
+        <h3 class="font-bold text-lg mt-4">Health and safety</h3>
+        <p class="text-sm text-muted mt-2">A school nurse on duty, CCTV on campus and a clean canteen serving fresh meals.</p>
+        <p class="text-xs font-semibold text-brand mt-4 tracking-wide">CCTV + NURSE ON DUTY</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="faculty" class="bg-tint py-16 md:py-20">
+    <div class="wrap">
+      <div class="max-w-2xl">
+        <p class="text-brand font-semibold uppercase tracking-widest text-sm">Faculty</p>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2">Teachers who know their students</h2>
+        <p class="mt-3 text-muted">Sample profiles. Replace the names and details with your own staff.</p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <article class="card p-6 text-center">
+          <div class="w-20 h-20 mx-auto rounded-full bg-brand text-onbrand grid place-items-center font-display font-bold text-2xl">SA</div>
+          <h3 class="font-bold text-lg mt-4">Mrs. Sunita Adhikari</h3>
+          <p class="text-sm font-semibold text-brand">Principal</p>
+          <p class="text-sm text-muted mt-2">M.Ed., 24 years in school leadership.</p>
+        </article>
+        <article class="card p-6 text-center">
+          <div class="w-20 h-20 mx-auto rounded-full bg-brand text-onbrand grid place-items-center font-display font-bold text-2xl">RS</div>
+          <h3 class="font-bold text-lg mt-4">Mr. Rajesh Shrestha</h3>
+          <p class="text-sm font-semibold text-brand">Head of Science</p>
+          <p class="text-sm text-muted mt-2">M.Sc. Physics, 15 years teaching Grades 9–12.</p>
+        </article>
+        <article class="card p-6 text-center">
+          <div class="w-20 h-20 mx-auto rounded-full bg-brand text-onbrand grid place-items-center font-display font-bold text-2xl">PT</div>
+          <h3 class="font-bold text-lg mt-4">Ms. Priya Thapa</h3>
+          <p class="text-sm font-semibold text-brand">Head of English</p>
+          <p class="text-sm text-muted mt-2">M.A. English, leads the debate and writing clubs.</p>
+        </article>
+        <article class="card p-6 text-center">
+          <div class="w-20 h-20 mx-auto rounded-full bg-brand text-onbrand grid place-items-center font-display font-bold text-2xl">BK</div>
+          <h3 class="font-bold text-lg mt-4">Mr. Bikash Karki</h3>
+          <p class="text-sm font-semibold text-brand">Computer and Robotics</p>
+          <p class="text-sm text-muted mt-2">B.E. Computer, runs the new robotics lab.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="news" class="wrap py-16 md:py-20">
+    <div class="max-w-2xl">
+      <p class="text-brand font-semibold uppercase tracking-widest text-sm">Latest</p>
+      <h2 class="text-3xl md:text-4xl font-bold mt-2">News and announcements</h2>
+    </div>
+    <div class="mt-10 grid md:grid-cols-3 gap-6">
+      <article class="card p-6"><p class="text-xs font-semibold text-brand tracking-wide">28 OCT 2026</p><h3 class="font-bold text-xl mt-2">Grade 10 team wins inter-school quiz</h3><p class="text-sm text-muted mt-2">Our students took first place at the national championship held in Lalitpur.</p></article>
+      <article class="card p-6"><p class="text-xs font-semibold text-brand tracking-wide">15 OCT 2026</p><h3 class="font-bold text-xl mt-2">New robotics lab opens</h3><p class="text-sm text-muted mt-2">The lab is open to Grades 6 and above, with weekly coding and building sessions.</p></article>
+      <article class="card p-6"><p class="text-xs font-semibold text-brand tracking-wide">02 OCT 2026</p><h3 class="font-bold text-xl mt-2">Admissions open for 2027</h3><p class="text-sm text-muted mt-2">Applications are being accepted for all grades. Seats are limited.</p></article>
+    </div>
+  </section>
+
+  <section id="gallery" class="bg-tint py-16 md:py-20">
+    <div class="wrap">
+      <div class="max-w-2xl">
+        <p class="text-brand font-semibold uppercase tracking-widest text-sm">Gallery</p>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2">Life at Bright Future</h2>
+        <p class="mt-3 text-muted">Placeholder tiles. Replace them with your own photos.</p>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter gallery">
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="academics" aria-pressed="false">Academics</button>
+        <button class="chip" data-filter="sports" aria-pressed="false">Sports</button>
+        <button class="chip" data-filter="arts" aria-pressed="false">Arts</button>
+        <button class="chip" data-filter="events" aria-pressed="false">Events</button>
+      </div>
+      <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <button class="g-tile" data-cat="academics" data-title="Library reading hour" style="--c1:#2b4cb3;--c2:#16224a;"><span>Library reading hour</span></button>
+        <button class="g-tile" data-cat="events" data-title="Annual Science Fair" style="--c1:#8a3fb0;--c2:#3b1d6b;"><span>Annual Science Fair</span></button>
+        <button class="g-tile" data-cat="academics" data-title="Robotics lab session" style="--c1:#0b7285;--c2:#0a3a4a;"><span>Robotics lab session</span></button>
+        <button class="g-tile" data-cat="sports" data-title="Sports Day relay" style="--c1:#0f7a5c;--c2:#0a3f43;"><span>Sports Day relay</span></button>
+        <button class="g-tile" data-cat="sports" data-title="Football team practice" style="--c1:#2f8f2f;--c2:#1a4d2a;"><span>Football team practice</span></button>
+        <button class="g-tile" data-cat="arts" data-title="Art exhibition" style="--c1:#b4560f;--c2:#6b2d12;"><span>Art exhibition</span></button>
+        <button class="g-tile" data-cat="arts" data-title="Annual concert" style="--c1:#b02a5b;--c2:#5c1535;"><span>Annual concert</span></button>
+        <button class="g-tile" data-cat="events" data-title="Grade 12 farewell" style="--c1:#5a4fcf;--c2:#2a2569;"><span>Grade 12 farewell</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div id="lightbox" class="lb" hidden role="dialog" aria-modal="true" aria-label="Gallery viewer">
+    <button id="lbClose" class="lb-btn" style="top: max(16px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px));" aria-label="Close">✕</button>
+    <button id="lbPrev" class="lb-btn" style="left: max(16px, env(safe-area-inset-left, 0px)); top: 50%;" aria-label="Previous">‹</button>
+    <button id="lbNext" class="lb-btn" style="right: max(16px, env(safe-area-inset-right, 0px)); top: 50%;" aria-label="Next">›</button>
+    <figure class="lb-fig">
+      <div id="lbPanel" class="g-panel"></div>
+      <figcaption id="lbCap" class="mt-3 text-center font-semibold"></figcaption>
+    </figure>
+  </div>
+
+  <section id="admission" class="wrap py-16 md:py-20 grid md:grid-cols-2 gap-12">
+    <div class="min-w-0">
+      <p class="text-brand font-semibold uppercase tracking-widest text-sm">Admissions</p>
+      <h2 class="text-3xl md:text-4xl font-bold mt-2">Send us an enquiry</h2>
+      <p class="mt-4 text-muted">Ask about admission, fees, scholarships or a campus visit. The admissions office replies within two working days.</p>
+      <h3 class="font-bold text-lg mt-8">How admission works</h3>
+      <ol class="mt-4 space-y-4">
+        <li class="flex gap-4"><span class="shrink-0 w-8 h-8 rounded-full bg-brand text-onbrand grid place-items-center font-bold text-sm">1</span><p class="text-sm"><strong>Send an enquiry</strong> with the grade you are applying for.</p></li>
+        <li class="flex gap-4"><span class="shrink-0 w-8 h-8 rounded-full bg-brand text-onbrand grid place-items-center font-bold text-sm">2</span><p class="text-sm"><strong>Visit the campus</strong> and meet the class teacher.</p></li>
+        <li class="flex gap-4"><span class="shrink-0 w-8 h-8 rounded-full bg-brand text-onbrand grid place-items-center font-bold text-sm">3</span><p class="text-sm"><strong>Entrance assessment</strong> for Grade 1 and above.</p></li>
+        <li class="flex gap-4"><span class="shrink-0 w-8 h-8 rounded-full bg-brand text-onbrand grid place-items-center font-bold text-sm">4</span><p class="text-sm"><strong>Confirm your seat</strong> by submitting documents and the admission fee.</p></li>
+      </ol>
+    </div>
+    <form id="admissionForm" class="min-w-0 card p-6 sm:p-8 space-y-4" style="transform:none;">
+      <div><label class="block text-sm font-semibold mb-1" for="student">Student's name</label><input id="student" required class="field"></div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="block text-sm font-semibold mb-1" for="grade">Applying for</label>
+          <select id="grade" class="field"><option>Nursery–KG</option><option>Grades 1–5</option><option>Grades 6–8</option><option>Grades 9–12</option></select></div>
+        <div><label class="block text-sm font-semibold mb-1" for="phone">Phone</label><input id="phone" type="tel" required class="field"></div>
+      </div>
+      <div><label class="block text-sm font-semibold mb-1" for="topic">Enquiry about</label>
+        <select id="topic" class="field"><option>Admission</option><option>Fees and scholarships</option><option>School transport</option><option>Campus visit</option><option>Something else</option></select></div>
+      <div><label class="block text-sm font-semibold mb-1" for="email">Parent's email</label><input id="email" type="email" required class="field"></div>
+      <div><label class="block text-sm font-semibold mb-1" for="msg">Message</label><textarea id="msg" rows="3" class="field"></textarea></div>
+      <button class="w-full bg-brand text-onbrand font-semibold py-3 rounded-md hover:opacity-90">Send enquiry</button>
+      <p id="formMsg" class="text-sm text-brand text-center" hidden>Thank you. This is a demo form, so nothing was sent yet.</p>
+    </form>
+  </section>
+  <section id="contact" class="bg-tint py-16 md:py-20">
+    <div class="wrap">
+      <div class="max-w-2xl">
+        <p class="text-brand font-semibold uppercase tracking-widest text-sm">Contact</p>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2">Find us and reach the right office</h2>
+        <p class="mt-3 text-muted">Sample details. Update them with your school's real address and numbers.</p>
+      </div>
+
+      <div class="mt-10 grid md:grid-cols-2 gap-6">
+        <div class="card p-6 sm:p-8 min-w-0" style="transform:none;">
+          <dl class="space-y-4 text-sm">
+            <div class="flex gap-4"><dt class="font-semibold w-28 shrink-0">Address</dt><dd class="min-w-0">Purnima School, Kathmandu, Bagmati Province, Nepal</dd></div>
+            <div class="flex gap-4"><dt class="font-semibold w-28 shrink-0">Phone</dt><dd class="min-w-0">9843978644</dd></div>
+            <div class="flex gap-4"><dt class="font-semibold w-28 shrink-0">Email</dt><dd class="min-w-0 break-words">info@brightfuture.edu.np</dd></div>
+            <div class="flex gap-4"><dt class="font-semibold w-28 shrink-0">Office hours</dt><dd class="min-w-0">Sunday to Friday, 9:00 AM to 4:00 PM<br>Closed on Saturdays and public holidays</dd></div>
+          </dl>
+        </div>
+
+        <div class="min-w-0 rounded-2xl overflow-hidden flex flex-col justify-between p-6 sm:p-8 text-white" style="min-height: 220px; background: linear-gradient(160deg,#2b4cb3,#16224a); position: relative;">
+          <div aria-hidden="true" style="position:absolute; inset:0; opacity:.18; background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 36px 36px;"></div>
+          <svg class="w-10 h-10 relative" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.800 12 21 12 21zM12 12a2.500 2.500 0 1 0 0-5 2.500 2.500 0 0 0 0 5z"/></svg>
+          <div class="relative">
+            <p class="font-display font-bold text-xl">Kathmandu campus</p>
+            <p class="text-sm mt-1" style="color: var(--hero-soft);">Maps cannot be embedded here, so open the location in a new tab.</p>
+            <a class="inline-block mt-4 px-5 py-2 rounded-md font-semibold hover:opacity-90" style="background: var(--accent); color:#14213d;" href="https://www.google.com/maps/search/?api=1&query=Kathmandu+Nepal+school">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-xl mt-12">Who to call</h3>
+      <div class="mt-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card p-5" style="transform:none;"><p class="font-semibold">Principal's office</p><p class="text-sm text-muted mt-1">Ext. 101</p></div>
+        <div class="card p-5" style="transform:none;"><p class="font-semibold">Admissions</p><p class="text-sm text-muted mt-1">Ext. 102</p></div>
+        <div class="card p-5" style="transform:none;"><p class="font-semibold">Accounts and fees</p><p class="text-sm text-muted mt-1">Ext. 103</p></div>
+        <div class="card p-5" style="transform:none;"><p class="font-semibold">Transport</p><p class="text-sm text-muted mt-1">Ext. 104</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer style="background: var(--hero); color: var(--hero-soft);">
+  <div class="wrap py-12 grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+    <div class="min-w-0"><h3 class="font-bold text-lg text-white">Purnima School</h3><p class="text-sm mt-3">Nurturing curious minds and confident leaders since 1998.</p></div>
+    <div><h4 class="font-semibold text-white">Quick links</h4>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li><a class="hover:text-white" href="#about">About</a></li><li><a class="hover:text-white" href="#programs">Programs</a></li>
+        <li><a class="hover:text-white" href="#news">News</a></li><li><a class="hover:text-white" href="#admission">Admissions</a></li><li><a class="hover:text-white" href="#contact">Contact</a></li>
+      </ul></div>
+    <div class="min-w-0"><h4 class="font-semibold text-white">Contact</h4><p class="text-sm mt-3">Kathmandu, Nepal<br>9843978644<br>info@brightfuture.edu.np</p></div>
+  </div>
+  <div class="text-center text-xs py-4" style="border-top: 1px solid rgba(255,255,255,.15);">© <span id="year">2026</span> Purnima School. All rights reserved.</div>
+</footer>
+
+<script>
+  var btn = document.getElementById('menuBtn'), menu = document.getElementById('mobileMenu');
+  function setMenu(open) {
+    menu.classList.toggle('hidden', !open); menu.classList.toggle('flex', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
+  menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+  document.getElementById('admissionForm').addEventListener('submit', function (e) {
+    e.preventDefault(); document.getElementById('formMsg').hidden = false; e.target.reset();
+  });
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Gallery: filter chips and lightbox
+  var tiles = [].slice.call(document.querySelectorAll('.g-tile'));
+  var chips = [].slice.call(document.querySelectorAll('.chip'));
+  var lb = document.getElementById('lightbox'), panel = document.getElementById('lbPanel'), cap = document.getElementById('lbCap');
+  var shown = tiles, pos = 0;
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var f = chip.getAttribute('data-filter');
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+      tiles.forEach(function (t) { t.hidden = f !== 'all' && t.getAttribute('data-cat') !== f; });
+      shown = tiles.filter(function (t) { return !t.hidden; });
+    });
+  });
+  function show(i) {
+    pos = (i + shown.length) % shown.length;
+    var t = shown[pos];
+    panel.style.setProperty('--c1', t.style.getPropertyValue('--c1'));
+    panel.style.setProperty('--c2', t.style.getPropertyValue('--c2'));
+    cap.textContent = t.getAttribute('data-title');
+  }
+  tiles.forEach(function (t) {
+    t.addEventListener('click', function () { show(shown.indexOf(t)); lb.hidden = false; document.getElementById('lbClose').focus(); });
+  });
+  document.getElementById('lbClose').addEventListener('click', function () { lb.hidden = true; });
+  document.getElementById('lbPrev').addEventListener('click', function () { show(pos - 1); });
+  document.getElementById('lbNext').addEventListener('click', function () { show(pos + 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) lb.hidden = true; });
+  document.addEventListener('keydown', function (e) {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') lb.hidden = true;
+    if (e.key === 'ArrowLeft') show(pos - 1);
+    if (e.key === 'ArrowRight') show(pos + 1);
+  });
+</script>
+
+</body></html>
